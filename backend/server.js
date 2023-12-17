@@ -13,14 +13,11 @@ const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 const connectDB = require("./config/db");
 
 const app = express();
-dotenv.config({ path: "./config.env" });
+dotenv.config();
+
 connectDB();
 app.use(cors());
 app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("API is RUNNING");
-});
 
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
@@ -29,6 +26,18 @@ app.use("/api/message", messageRoutes);
 // -----------------Deployment------------------
 
 const __dirname1 = path.resolve();
+console.log(process.env.NODE_ENV);
+if (process.env.NODE_ENV === "production") {
+  console.log("yess");
+  app.use(express.static(path.join(__dirname1, "/frontend/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname1, "frontend", "dist", "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is RUNNING");
+  });
+}
 
 // -----------------Deployment------------------
 
@@ -36,7 +45,7 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
-
+console.log(process.env.PORT);
 const server = app.listen(PORT, console.log(`Server started on port:${PORT}`));
 
 const io = require("socket.io")(server, {
