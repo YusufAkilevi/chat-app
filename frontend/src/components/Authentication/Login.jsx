@@ -7,7 +7,7 @@ import { ChatState } from "../../context/ChatProvider";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setUser, setSelectedChat } = ChatState();
+  const { setUser ,setSelectedChat } = ChatState();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -43,7 +43,7 @@ const Login = () => {
       );
 
       setUser(data);
-      setSelectedChat();
+      setSelectedChat()
       localStorage.setItem("userInfo", JSON.stringify(data));
       setLoading(false);
 
